@@ -5,13 +5,13 @@ using DesafioLivrosMVC.Models.JsonEnvio;
 
 namespace DesafioLivrosMVC.Service;
 
-public class LivroService : ILivroService
+public class LivroService
 {
     private readonly APIClient _client;
 
-    public LivroService(APIClient APIClient)
+    public LivroService()
     {
-        _client = APIClient ?? throw new ArgumentException(nameof(APIClient));
+        _client = new APIClient();
     }
 
     public async Task<List<Livro>> ConsultarLivroAsync(string? pesquisa)

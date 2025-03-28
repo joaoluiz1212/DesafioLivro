@@ -8,9 +8,9 @@ public class LivroController : Controller
 {
     private readonly LivroService _service;
 
-    public LivroController(LivroService livroService)
+    public LivroController()
     {
-        _service = livroService ?? throw new ArgumentNullException(nameof(livroService));
+        _service = new LivroService();
     }
 
     public async Task<IActionResult> Index(string? pesquisa)

@@ -10,9 +10,9 @@ public class APIClient
     private readonly HttpClient _httpClient;
     private string _baseUrl = "http://localhost:5070/api";
 
-    public APIClient(HttpClient httpClient)
+    public APIClient()
     {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _httpClient = new HttpClient();
     }
 
     public async Task<List<Livro>> ObterDadosLivroAsync(string? pesquisa)
