@@ -9,38 +9,86 @@ public class LivroService : ILivroService
 {
     private readonly APIClient _client;
 
-    public LivroService()
+    public LivroService(APIClient APIClient)
     {
-        _client = new APIClient();
+        _client = APIClient ?? throw new ArgumentException(nameof(APIClient));
     }
 
     public async Task<List<Livro>> ConsultarLivroAsync(string? pesquisa)
     {
-        return await _client.ObterDadosLivroAsync(pesquisa: pesquisa);
+        try
+        {
+            return await _client.ObterDadosLivroAsync(pesquisa: pesquisa);
+
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ServiceException("Erro ao consultar o Livro", ex);
+        }
     }
 
     public async Task<Livro> ObterLivroPorIDAsync(int id)
     {
-        return await _client.ObterDadosLivroPorIDAsync(id: id);
+        try
+        {
+            return await _client.ObterDadosLivroPorIDAsync(id: id);
+
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ServiceException("Erro ao consultar o Livro por ID", ex);
+        }
     }
 
     public async Task IncluirLivro(Livro livro)
     {
-        var livroDTO = new AdicionarLivro
+        try
         {
-            Titulo = livro.Titulo,
-            AnoPublicacao = livro.AnoPublicacao,
-            Autor = livro.Autor,
-            Genero = livro.Genero,
-            Preco = livro.Preco
-        };
+            var ObjetoEnvio = MontarObjetoEnvio(livro);
 
-       await _client.EnviarLivroAsync(livroDTO: livroDTO);
+            await _client.EnviarLivroAsync(ObjetoEnvio: ObjetoEnvio);
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ServiceException("Erro ao Incluir o Livro", ex);
+        }
     }
 
     public async Task EditarLivroPorID(Livro livro)
     {
-        var livroDTO = new AtualizarLivro
+        try
+        {
+            var ObjetoEnvio = MontarObjetoEnvio(livro);
+
+            await _client.AtualizarDadosDoLivroAsync(id: livro.Id, ObjetoEnvio: ObjetoEnvio);
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ServiceException("Erro ao Editar o Livro", ex);
+        }
+    }
+
+    public async Task DeletarLivroPorID(int id)
+    {
+        try
+        {
+            await _client.DeletarDadosDoLivroAsync(id: id);
+
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ServiceException("Erro ao Deletar o Livro", ex);
+        }
+    }
+
+    private LivroEnvio MontarObjetoEnvio(Livro livro)
+    {
+        return new LivroEnvio
         {
             Titulo = livro.Titulo,
             AnoPublicacao = livro.AnoPublicacao,
@@ -48,12 +96,5 @@ public class LivroService : ILivroService
             Genero = livro.Genero,
             Preco = livro.Preco
         };
-
-        await _client.AtualizarDadosDoLivroAsync(id: livro.Id, livro: livroDTO);
-    }
-
-    public async Task DeletarLivroPorID(int id)
-    {
-       await _client.DeletarDadosDoLivroAsync(id: id);
     }
 }

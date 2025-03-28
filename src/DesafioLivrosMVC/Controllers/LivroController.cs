@@ -8,9 +8,9 @@ public class LivroController : Controller
 {
     private readonly LivroService _service;
 
-    public LivroController()
+    public LivroController(LivroService livroService)
     {
-        _service = new LivroService();
+        _service = livroService ?? throw new ArgumentNullException(nameof(livroService));
     }
 
     public async Task<IActionResult> Index(string? pesquisa)
@@ -20,7 +20,7 @@ public class LivroController : Controller
         return View(livros);
     }
 
-    public ActionResult CriarLivro()
+    public IActionResult CriarLivro()
     {
         return View();
     }
@@ -32,17 +32,37 @@ public class LivroController : Controller
         {
             return View(livro);
         }
-       await _service.IncluirLivro(livro: livro);
 
-        TempData["MensagemSucesso"] = "Livro adicionado com sucesso!";
-        return RedirectToAction("Index");
+        try
+        {
+            await _service.IncluirLivro(livro: livro);
+
+            TempData["MensagemSucesso"] = "Livro adicionado com sucesso!";
+            return RedirectToAction("Index");
+        }
+
+        catch (ServiceException ex)
+        {
+            TempData["MensagemErro"] = $"Erro ao adicionar livro: {ex.Message}";
+            return View("Index");
+        }
+
     }
 
-    public ActionResult EditarLivro(int Id)
+    public async Task<IActionResult> EditarLivro(int Id)
     {
-        var livro = _service.ObterLivroPorIDAsync(id: Id).Result;
+        try
+        {
+            var livro = await _service.ObterLivroPorIDAsync(id: Id);
 
-        return View(livro);
+            return View(livro);
+        }
+
+        catch (ServiceException ex)
+        {
+            TempData["MensagemErro"] = $"Erro ao buscar livro por ID: {ex.Message}";
+            return View("Index");
+        }
     }
 
     [HttpPost]
@@ -52,23 +72,52 @@ public class LivroController : Controller
         {
             return View(livro);
         }
-        await _service.EditarLivroPorID(livro: livro);
-        TempData["MensagemSucesso"] = "Livro editado com sucesso!";
-        return RedirectToAction("Index");
-    }
-    public ActionResult DeletarLivro(int Id)
-    {
-        var livro = _service.ObterLivroPorIDAsync(id: Id).Result;
 
-        return View(livro);
+        try
+        {
+            await _service.EditarLivroPorID(livro: livro);
+            TempData["MensagemSucesso"] = "Livro editado com sucesso!";
+            return RedirectToAction("Index");
+        }
+
+        catch (ServiceException ex)
+        {
+            TempData["MensagemErro"] = $"Erro ao atualizar livro: {ex.Message}";
+            return View("Index");
+        }
+    }
+    public async Task<IActionResult> DeletarLivro(int Id)
+    {
+        try
+        {
+            var livro = await _service.ObterLivroPorIDAsync(id: Id);
+
+            return View(livro);
+        }
+
+        catch (ServiceException ex)
+        {
+            TempData["MensagemErro"] = $"Erro ao buscar o livro por id: {ex.Message}";
+            return View("Index");
+        }
     }
 
     [HttpPost]
     public async Task<IActionResult> DeletarLivroPorID(int Id)
     {
-        await _service.DeletarLivroPorID(id: Id);
 
-        TempData["MensagemSucesso"] = "Livro deletado com sucesso!";
-        return RedirectToAction("Index");
+        try
+        {
+            await _service.DeletarLivroPorID(id: Id);
+
+            TempData["MensagemSucesso"] = "Livro deletado com sucesso!";
+            return RedirectToAction("Index");
+        }
+
+        catch (ServiceException ex)
+        {
+            TempData["MensagemErro"] = $"Erro ao deletar livro: {ex.Message}";
+            return View("Index");
+        }
     }
 }

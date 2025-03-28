@@ -10,45 +10,85 @@ public class APIClient
     private readonly HttpClient _httpClient;
     private string _baseUrl = "http://localhost:5070/api";
 
-    public APIClient()
+    public APIClient(HttpClient httpClient)
     {
-        _httpClient = new HttpClient();
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
     public async Task<List<Livro>> ObterDadosLivroAsync(string? pesquisa)
     {
-        if (!string.IsNullOrEmpty(pesquisa))
+        try
         {
-            _baseUrl = $"{_baseUrl}/obter-livro?pesquisa={pesquisa}";
-        }
-        else
-            _baseUrl = $"{_baseUrl}/obter-livro";
+            if (!string.IsNullOrEmpty(pesquisa))
+            {
+                _baseUrl = $"{_baseUrl}/obter-livro?pesquisa={pesquisa}";
+            }
+            else
+                _baseUrl = $"{_baseUrl}/obter-livro";
 
-        return await ObterRequisicaoAsync<List<Livro>>(_baseUrl);
+            return await ObterRequisicaoAsync<List<Livro>>(_baseUrl);
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ApiRequestException("Erro ao realizar a requisição no método obter-livro da API", ex);
+        }
     }
 
     public async Task<Livro> ObterDadosLivroPorIDAsync(int id)
     {
-        return await ObterRequisicaoAsync<Livro>($"{_baseUrl}/obter-livro-por-id/{id}");
+        try
+        {
+            return await ObterRequisicaoAsync<Livro>($"{_baseUrl}/obter-livro-por-id/{id}");
 
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ApiRequestException("Erro ao realizar a requisição no método obter-livro-por-id da API", ex);
+        }
     }
 
-    public async Task EnviarLivroAsync(AdicionarLivro livroDTO)
+    public async Task EnviarLivroAsync(LivroEnvio ObjetoEnvio)
     {
-        var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/adicionar-livro", livroDTO);
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/adicionar-livro", ObjetoEnvio);
+            response.EnsureSuccessStatusCode();
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ApiRequestException("Erro ao realizar a requisição no método adicionar-livro da API", ex);
+        }
     }
 
-    public async Task AtualizarDadosDoLivroAsync(int id, AtualizarLivro livro)
+    public async Task AtualizarDadosDoLivroAsync(int id, LivroEnvio ObjetoEnvio)
     {
-        var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/atualizar-livro/{id}", livro);
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/atualizar-livro/{id}", ObjetoEnvio);
+            response.EnsureSuccessStatusCode();
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ApiRequestException("Erro ao realizar a requisição no método atualizar-livro da API", ex);
+        }
     }
 
     public async Task DeletarDadosDoLivroAsync(int id)
     {
-        var response = await _httpClient.DeleteAsync($"{_baseUrl}/deletar-livro/{id}");
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            var response = await _httpClient.DeleteAsync($"{_baseUrl}/deletar-livro/{id}");
+            response.EnsureSuccessStatusCode();
+        }
+
+        catch (HttpRequestException ex)
+        {
+            throw new ApiRequestException("Erro ao realizar a requisição no método deletar-livro da API", ex);
+        }
     }
 
     private async Task<T> ObterRequisicaoAsync<T>(string url)
@@ -58,6 +98,4 @@ public class APIClient
         var content = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<T>(content);
     }
-
-
 }

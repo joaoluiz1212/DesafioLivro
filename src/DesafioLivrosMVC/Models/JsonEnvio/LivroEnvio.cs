@@ -1,6 +1,6 @@
 ﻿namespace DesafioLivrosMVC.Models.JsonEnvio;
 
-public class AdicionarLivro
+public class LivroEnvio
 {
     public string Titulo { get; set; }
     public string Autor { get; set; }
