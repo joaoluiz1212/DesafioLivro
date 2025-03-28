@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Livro>
+@{
+    ViewData["Title"] = "Lista de Livros";
+}
+
+<h2 class="mb-3">📚 Catálogo de Livros</h2>
+
+<form asp-action="Index" class="mb-3" method="get">
+    <div class="input-group">
+        <input type="text" name="search" class="form-control" placeholder="Buscar por título ou autor..." />
+        <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    </div>
+</form>
+
+<a asp-action="CriarLivro" class="btn btn-success mb-3">➕ Adicionar Novo Livro</a>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Ano</th>
+            <th>Gênero</th>
+            <th>Preço</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var livro in Model)
+        {
+            <tr>
+                <td>@livro.Titulo</td>
+                <td>@livro.Autor</td>
+                <td>@livro.AnoPublicacao</td>
+                <td>@livro.Genero</td>
+                <td>R$ @livro.Preco.ToString("F2")</td>
+                <td>
+                    <a asp-action="EditarLivro" asp-route-id="@livro.Id" class="btn btn-warning btn-sm">✏️ Editar</a>
+                    <a asp-action="DeletarLivro" asp-route-id="@livro.Id" class="btn btn-danger btn-sm">🗑 Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

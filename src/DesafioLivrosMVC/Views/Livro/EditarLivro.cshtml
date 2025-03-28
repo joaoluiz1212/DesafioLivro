@@ -1,0 +1,11 @@
+﻿@model Livro
+@{
+    ViewData["Title"] = "Editar Livro";
+}
+
+<h2>✏️ Editar Livro</h2>
+
+<form asp-action="AtualizarLivro" method="post" class="mt-3">
+    <input type="hidden" asp-for="Id" />
+    <partial name="CriarLivro" />
+</form>
