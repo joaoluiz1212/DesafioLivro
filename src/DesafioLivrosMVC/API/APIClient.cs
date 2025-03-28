@@ -22,8 +22,10 @@ public class APIClient
         {
             _baseUrl = $"{_baseUrl}/obter-livro?pesquisa={pesquisa}";
         }
+        else
+            _baseUrl = $"{_baseUrl}/obter-livro";
 
-        return await ObterRequisicaoAsync<List<Livro>>($"{_baseUrl}/obter-livro");
+        return await ObterRequisicaoAsync<List<Livro>>(_baseUrl);
     }
 
     public async Task<Livro> ObterDadosLivroPorIDAsync(int id)
@@ -32,21 +34,21 @@ public class APIClient
 
     }
 
-    public async void EnviarLivroAsync(AdicionarLivroDTO livroDTO)
+    public async Task EnviarLivroAsync(AdicionarLivro livroDTO)
     {
         var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/adicionar-livro", livroDTO);
         response.EnsureSuccessStatusCode();
     }
 
-    public async void AtualizarDadosDoLivroAsync(int id, AtualizarLivroDTO livro)
+    public async Task AtualizarDadosDoLivroAsync(int id, AtualizarLivro livro)
     {
         var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/atualizar-livro/{id}", livro);
         response.EnsureSuccessStatusCode();
     }
 
-    public async void DeletarDadosDoLivroAsync(int id)
+    public async Task DeletarDadosDoLivroAsync(int id)
     {
-        var response = await _httpClient.DeleteAsync($"{_baseUrl}/atualizar-livro/{id}");
+        var response = await _httpClient.DeleteAsync($"{_baseUrl}/deletar-livro/{id}");
         response.EnsureSuccessStatusCode();
     }
 

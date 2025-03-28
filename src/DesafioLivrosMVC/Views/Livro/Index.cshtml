@@ -3,11 +3,20 @@
     ViewData["Title"] = "Lista de Livros";
 }
 
+
 <h2 class="mb-3">📚 Catálogo de Livros</h2>
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["MensagemSucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="fechar"></button>
+    </div>
+}
 
 <form asp-action="Index" class="mb-3" method="get">
     <div class="input-group">
-        <input type="text" name="search" class="form-control" placeholder="Buscar por título ou autor..." />
+        <input type="text" name="pesquisa" class="form-control" placeholder="Buscar por título ou autor..." />
         <button type="submit" class="btn btn-outline-primary">Buscar</button>
     </div>
 </form>
@@ -36,7 +45,12 @@
                 <td>R$ @livro.Preco.ToString("F2")</td>
                 <td>
                     <a asp-action="EditarLivro" asp-route-id="@livro.Id" class="btn btn-warning btn-sm">✏️ Editar</a>
-                    <a asp-action="DeletarLivro" asp-route-id="@livro.Id" class="btn btn-danger btn-sm">🗑 Excluir</a>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDeletarLivro-@livro.Id">
+                        🗑 Excluir
+                    </button>
+
+                    @Html.Partial("_DeletarLivro", livro)
+
                 </td>
             </tr>
         }

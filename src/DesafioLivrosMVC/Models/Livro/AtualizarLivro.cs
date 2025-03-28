@@ -1,6 +1,6 @@
-﻿namespace DesafioLivrosMVC.Models.LivroDTO;
+﻿namespace DesafioLivrosMVC.Models.Livro;
 
-public class AtualizarLivroDTO
+public class AtualizarLivro
 {
     public string Titulo { get; set; }
     public string Autor { get; set; }

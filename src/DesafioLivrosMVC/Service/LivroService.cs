@@ -23,9 +23,9 @@ public class LivroService
         return await _client.ObterDadosLivroPorIDAsync(id: id);
     }
 
-    public void IncluirLivro(Livro livro)
+    public async Task IncluirLivro(Livro livro)
     {
-        var livroDTO = new AdicionarLivroDTO
+        var livroDTO = new AdicionarLivro
         {
             Titulo = livro.Titulo,
             AnoPublicacao = livro.AnoPublicacao,
@@ -34,12 +34,12 @@ public class LivroService
             Preco = livro.Preco
         };
 
-        _client.EnviarLivroAsync(livroDTO: livroDTO);
+       await _client.EnviarLivroAsync(livroDTO: livroDTO);
     }
 
-    public void EditarLivroPorID(Livro livro)
+    public async Task EditarLivroPorID(Livro livro)
     {
-        var livroDTO = new AtualizarLivroDTO
+        var livroDTO = new AtualizarLivro
         {
             Titulo = livro.Titulo,
             AnoPublicacao = livro.AnoPublicacao,
@@ -48,11 +48,11 @@ public class LivroService
             Preco = livro.Preco
         };
 
-        _client.AtualizarDadosDoLivroAsync(id: livro.Id, livro: livroDTO);
+        await _client.AtualizarDadosDoLivroAsync(id: livro.Id, livro: livroDTO);
     }
 
-    public void DeletarLivroPorID(int id)
+    public async Task DeletarLivroPorID(int id)
     {
-        _client.DeletarDadosDoLivroAsync(id: id);
+       await _client.DeletarDadosDoLivroAsync(id: id);
     }
 }

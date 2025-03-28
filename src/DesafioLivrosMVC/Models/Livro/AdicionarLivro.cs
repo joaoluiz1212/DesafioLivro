@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace DesafioLivrosMVC.Models;
 
-namespace DesafioLivrosMVC.Models.LivroDTO;
-
-public class AdicionarLivroDTO
+public class AdicionarLivro
 {
     public string Titulo { get; set; }
     public string Autor { get; set; }

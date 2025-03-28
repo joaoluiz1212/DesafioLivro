@@ -13,10 +13,9 @@ public class LivroController : Controller
         _service = new LivroService();
     }
 
-
-    public ActionResult Index(string? pesquisa)
+    public async Task<IActionResult> Index(string? pesquisa)
     {
-        var livros = _service.ConsultarLivroAsync(pesquisa).Result;
+        var livros = await _service.ConsultarLivroAsync(pesquisa);
 
         return View(livros);
     }
@@ -27,15 +26,16 @@ public class LivroController : Controller
     }
 
     [HttpPost]
-    public ActionResult AdicionarLivro(Livro livro)
+    public async Task<IActionResult> AdicionarLivro(Livro livro)
     {
         if (!ModelState.IsValid)
         {
             return View(livro);
         }
-        _service.IncluirLivro(livro: livro);
+       await _service.IncluirLivro(livro: livro);
 
-        return View("Index");
+        TempData["MensagemSucesso"] = "Livro adicionado com sucesso!";
+        return RedirectToAction("Index");
     }
 
     public ActionResult EditarLivro(int Id)
@@ -46,14 +46,15 @@ public class LivroController : Controller
     }
 
     [HttpPost]
-    public ActionResult AtualizarLivro(Livro livro)
+    public async Task<IActionResult> AtualizarLivro(Livro livro)
     {
         if (!ModelState.IsValid)
         {
             return View(livro);
         }
-        _service.EditarLivroPorID(livro: livro);
-        return View("Index");
+        await _service.EditarLivroPorID(livro: livro);
+        TempData["MensagemSucesso"] = "Livro editado com sucesso!";
+        return RedirectToAction("Index");
     }
     public ActionResult DeletarLivro(int Id)
     {
@@ -63,10 +64,11 @@ public class LivroController : Controller
     }
 
     [HttpPost]
-    public ActionResult DeletarLivroPorID(int Id)
+    public async Task<IActionResult> DeletarLivroPorID(int Id)
     {
-        _service.DeletarLivroPorID(id: Id);
+        await _service.DeletarLivroPorID(id: Id);
 
-        return View("Index");
+        TempData["MensagemSucesso"] = "Livro deletado com sucesso!";
+        return RedirectToAction("Index");
     }
 }
