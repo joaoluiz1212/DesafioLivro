@@ -1,4 +1,4 @@
-﻿namespace DesafioLivrosMVC.Models;
+﻿namespace DesafioLivrosMVC.Models.JsonEnvio;
 
 public class AdicionarLivro
 {

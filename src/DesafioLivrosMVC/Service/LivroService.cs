@@ -1,6 +1,6 @@
 ﻿using DesafioLivrosMVC.API;
 using DesafioLivrosMVC.Models;
-using DesafioLivrosMVC.Models.LivroDTO;
+using DesafioLivrosMVC.Models.JsonEnvio;
 
 namespace DesafioLivrosMVC.Service;
 

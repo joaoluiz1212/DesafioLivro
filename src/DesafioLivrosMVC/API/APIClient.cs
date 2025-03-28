@@ -1,7 +1,6 @@
 ﻿using Azure;
 using DesafioLivrosMVC.Models;
-using DesafioLivrosMVC.Models.LivroDTO;
-using System.Formats.Asn1;
+using DesafioLivrosMVC.Models.JsonEnvio;
 using System.Text.Json;
 
 namespace DesafioLivrosMVC.API;
