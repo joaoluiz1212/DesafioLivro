@@ -6,16 +6,16 @@ namespace DesafioLivrosMVC.Controllers;
 
 public class LivroController : Controller
 {
-    private readonly LivroService _service;
+    private readonly ILivroService _livroService;
 
-    public LivroController()
+    public LivroController(ILivroService livroService)
     {
-        _service = new LivroService();
+        _livroService = livroService;
     }
 
     public async Task<IActionResult> Index(string? pesquisa)
     {
-        var livros = await _service.ConsultarLivroAsync(pesquisa);
+        var livros = await _livroService.ConsultarLivroAsync(pesquisa);
 
         return View(livros);
     }
@@ -35,7 +35,7 @@ public class LivroController : Controller
 
         try
         {
-            await _service.IncluirLivro(livro: livro);
+            await _livroService.IncluirLivro(livro: livro);
 
             TempData["MensagemSucesso"] = "Livro adicionado com sucesso!";
             return RedirectToAction("Index");
@@ -53,7 +53,7 @@ public class LivroController : Controller
     {
         try
         {
-            var livro = await _service.ObterLivroPorIDAsync(id: Id);
+            var livro = await _livroService.ObterLivroPorIDAsync(id: Id);
 
             return View(livro);
         }
@@ -75,7 +75,7 @@ public class LivroController : Controller
 
         try
         {
-            await _service.EditarLivroPorID(livro: livro);
+            await _livroService.EditarLivroPorID(livro: livro);
             TempData["MensagemSucesso"] = "Livro editado com sucesso!";
             return RedirectToAction("Index");
         }
@@ -90,7 +90,7 @@ public class LivroController : Controller
     {
         try
         {
-            var livro = await _service.ObterLivroPorIDAsync(id: Id);
+            var livro = await _livroService.ObterLivroPorIDAsync(id: Id);
 
             return View(livro);
         }
@@ -108,7 +108,7 @@ public class LivroController : Controller
 
         try
         {
-            await _service.DeletarLivroPorID(id: Id);
+            await _livroService.DeletarLivroPorID(id: Id);
 
             TempData["MensagemSucesso"] = "Livro deletado com sucesso!";
             return RedirectToAction("Index");

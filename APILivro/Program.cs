@@ -1,4 +1,5 @@
 using APILivro.Moldes;
+using APILivro.Service;
 using AspNetCore.Scalar;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<Context>(opts =>
 opts.UseSqlServer(builder.Configuration.GetConnectionString("livroConnection")));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IAPIClient, APIService>();
 
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson();

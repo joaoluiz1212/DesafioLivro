@@ -1,7 +1,7 @@
 ﻿using DesafioLivrosMVC.Models;
 using DesafioLivrosMVC.Models.JsonEnvio;
 
-namespace DesafioLivrosMVC.Interface;
+namespace DesafioLivrosMVC.Service;
 
 public interface ILivroService
 {
@@ -10,6 +10,4 @@ public interface ILivroService
     Task IncluirLivro(Livro livro);
     Task EditarLivroPorID(Livro livro);
     Task DeletarLivroPorID(int id);
-
-
 }

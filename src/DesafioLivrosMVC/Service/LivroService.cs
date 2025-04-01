@@ -1,17 +1,16 @@
 ﻿using DesafioLivrosMVC.API;
-using DesafioLivrosMVC.Interface;
 using DesafioLivrosMVC.Models;
 using DesafioLivrosMVC.Models.JsonEnvio;
 
 namespace DesafioLivrosMVC.Service;
 
-public class LivroService
+public class LivroService : ILivroService
 {
-    private readonly APIClient _client;
+    private readonly IAPIClient _client;
 
-    public LivroService()
+    public LivroService(IAPIClient client)
     {
-        _client = new APIClient();
+        _client = client;
     }
 
     public async Task<List<Livro>> ConsultarLivroAsync(string? pesquisa)

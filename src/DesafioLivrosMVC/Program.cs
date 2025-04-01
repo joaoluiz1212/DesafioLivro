@@ -1,11 +1,16 @@
+using DesafioLivrosMVC.API;
 using DesafioLivrosMVC.Controllers;
+using DesafioLivrosMVC.Models;
+using DesafioLivrosMVC.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient<LivroController>();
+
+builder.Services.AddScoped<ILivroService, LivroService>();
+builder.Services.AddHttpClient<IAPIClient, APIClient>();
 
 var app = builder.Build();
 

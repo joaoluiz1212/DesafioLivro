@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace DesafioLivrosMVC.API;
 
-public class APIClient
+public class APIClient : IAPIClient
 {
     private readonly HttpClient _httpClient;
     private string _baseUrl = "http://localhost:5070/api";
