@@ -1,6 +1,7 @@
 ﻿using DesafioLivrosMVC.Models;
 using DesafioLivrosMVC.Service;
 using Microsoft.AspNetCore.Mvc;
+using DesafioLivrosMVC.Exceptions;
 
 namespace DesafioLivrosMVC.Controllers;
 

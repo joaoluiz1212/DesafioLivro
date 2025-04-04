@@ -1,5 +1,6 @@
 ﻿using APILivro.Moldes;
 using APILivro.Moldes.DTO;
+using APILivro.Repository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using APILivro.Moldes;
+using Microsoft.EntityFrameworkCore;
 
-namespace APILivro.Moldes;
+namespace APILivro.Repository;
 
 public class Context : DbContext
 {

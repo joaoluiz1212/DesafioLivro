@@ -1,12 +1,7 @@
-﻿using APILivro.Moldes;
+﻿using APILivro.Service;
+using APILivro.Exceptions;
 using APILivro.Moldes.DTO;
-using APILivro.Service;
-using AutoMapper;
-using Azure;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace APILivro.Controllers;
 
@@ -26,13 +21,21 @@ public class LivroControllerAPI : ControllerBase
     [Route("adicionar-livro")]
     public async Task<ActionResult> AdicionarLivro([FromBody] CriarLivroDTO livroParaAdicionar)
     {
+        try
+        {
+            var novoLivro = await _ApiService.AdicionarLivroAsync(livroParaAdicionar: livroParaAdicionar);
 
-        var novoLivro = await _ApiService.AdicionarLivroAsync(livroParaAdicionar: livroParaAdicionar);
+            if (novoLivro == null)
+                return NotFound();
 
-        if (novoLivro == null)
-            return NotFound();
+            return CreatedAtAction(nameof(ObterLivroPorID), new { id = novoLivro.Id }, novoLivro);
+        }
 
-        return CreatedAtAction(nameof(ObterLivroPorID), new { id = novoLivro.Id }, novoLivro);
+        catch (SericeException ex)
+        {
+            return BadRequest($"Erro ao adicionar o livro {livroParaAdicionar.Titulo}: {ex.Message}");
+        }
+
     }
 
     [HttpGet]
@@ -48,9 +51,9 @@ public class LivroControllerAPI : ControllerBase
 
             return Ok(livro);
         }
-        catch (Exception ex)
+        catch (SericeException ex)
         {
-            return NotFound("Erro de consulta da API");
+            return BadRequest($"Erro ao obter os dados do livro: {ex.Message}");
         }
 
     }
@@ -59,35 +62,56 @@ public class LivroControllerAPI : ControllerBase
     [Route("obter-livro-por-id/{id}")]
     public async Task<ActionResult> ObterLivroPorID(int id)
     {
-        var livro = await _ApiService.ObterLivroPorIDAsync(id: id);
+        try
+        {
+            var livro = await _ApiService.ObterLivroPorIDAsync(id: id);
 
-        if (livro == null)
-            return NotFound();
+            if (livro == null)
+                return NotFound();
 
-        return Ok(livro);
+            return Ok(livro);
+        }
+        catch (SericeException ex)
+        {
+            return BadRequest($"Erro ao obter os dados por id do livro: {ex.Message}");
+        }
     }
 
     [HttpPut()]
     [Route("atualizar-livro/{id}")]
     public async Task<ActionResult> AtualizarLivro(int id, AtualizarLivroDTO livroParaAtualizar)
     {
-        var retornoAtualizarLivro = await _ApiService.AtualizarLivroAsync(id: id, livroParaAtualizar: livroParaAtualizar);
+        try
+        {
+            var retornoAtualizarLivro = await _ApiService.AtualizarLivroAsync(id: id, livroParaAtualizar: livroParaAtualizar);
 
-        if (!retornoAtualizarLivro)
-            return NotFound();
+            if (!retornoAtualizarLivro)
+                return NotFound();
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (SericeException ex)
+        {
+            return BadRequest($"Erro ao atualizar o livro {livroParaAtualizar.Titulo}: {ex.Message}");
+        }
     }
 
     [HttpDelete()]
     [Route("deletar-livro/{id}")]
     public async Task<ActionResult> DeletarLivro(int id)
     {
-        var livro = await _ApiService.DeletarLivroAsync(id: id);
+        try
+        {
+            var livro = await _ApiService.DeletarLivroAsync(id: id);
 
-        if (livro == false)
-            return NotFound();
+            if (livro == false)
+                return NotFound();
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (SericeException ex)
+        {
+            return BadRequest($"Erro ao deletar o livro: {ex.Message}");
+        }
     }
 }

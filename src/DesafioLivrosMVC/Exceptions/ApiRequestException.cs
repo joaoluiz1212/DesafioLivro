@@ -1,4 +1,4 @@
-﻿namespace DesafioLivrosMVC.API;
+﻿namespace DesafioLivrosMVC.Exceptions;
 
 public class ApiRequestException : Exception
 {

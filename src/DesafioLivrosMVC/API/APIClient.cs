@@ -1,7 +1,7 @@
-﻿using Azure;
+﻿using System.Text.Json;
 using DesafioLivrosMVC.Models;
+using DesafioLivrosMVC.Exceptions;
 using DesafioLivrosMVC.Models.JsonEnvio;
-using System.Text.Json;
 
 namespace DesafioLivrosMVC.API;
 

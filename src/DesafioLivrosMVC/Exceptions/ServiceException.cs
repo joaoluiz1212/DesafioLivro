@@ -1,4 +1,4 @@
-﻿namespace DesafioLivrosMVC.Service;
+﻿namespace DesafioLivrosMVC.Exceptions;
 
 public class ServiceException : Exception
 {
