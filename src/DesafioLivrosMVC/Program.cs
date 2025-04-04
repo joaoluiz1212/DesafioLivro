@@ -9,8 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<ILivroService, LivroService>();
+//builder.Services.AddHttpClient<LivroController>();
 builder.Services.AddHttpClient<IAPIClient, APIClient>();
+builder.Services.AddScoped<ILivroService, LivroService>();
 
 var app = builder.Build();
 
@@ -22,7 +23,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();

@@ -37,7 +37,7 @@ public class APIService : IAPIClient
 
     public async Task<Livro> ObterLivroPorIDAsync(int id)
     {
-        return await _context.Livros.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+        return await _context.Livros.FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<bool> AtualizarLivroAsync(int id, AtualizarLivroDTO livroParaAtualizar)

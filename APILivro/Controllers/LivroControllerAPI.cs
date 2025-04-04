@@ -39,12 +39,20 @@ public class LivroControllerAPI : ControllerBase
     [Route("obter-livro")]
     public async Task<ActionResult> ObterLivro([FromQuery] string? pesquisa)
     {
-        var livro = await _ApiService.ObterLivroAsync(pesquisa: pesquisa);
+        try
+        {
+            var livro = await _ApiService.ObterLivroAsync(pesquisa: pesquisa);
 
-        if (livro == null)
-            return NotFound();
+            if (livro == null)
+                return NotFound();
 
-        return Ok(livro);
+            return Ok(livro);
+        }
+        catch (Exception ex)
+        {
+            return NotFound("Erro de consulta da API");
+        }
+
     }
 
     [HttpGet]

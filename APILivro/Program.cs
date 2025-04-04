@@ -19,10 +19,15 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.ListenAnyIP(8080);
+//});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.MapOpenApi();
     app.UseSwagger();
@@ -36,9 +41,24 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<Context>();
+        context.Database.Migrate(); // Aplica as migrations automaticamente
+        Console.WriteLine("Banco de dados migrado com sucesso!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Erro ao migrar banco de dados: {ex.Message}");
+    }
+}
 
-app.UseAuthorization();
+//app.UseHttpsRedirection();
+
+//app.UseAuthorization();
 
 app.MapControllers();
 

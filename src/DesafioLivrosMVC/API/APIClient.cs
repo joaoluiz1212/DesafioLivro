@@ -8,11 +8,12 @@ namespace DesafioLivrosMVC.API;
 public class APIClient : IAPIClient
 {
     private readonly HttpClient _httpClient;
-    private string _baseUrl = "http://localhost:5070/api";
+    private readonly string _baseUrl;
 
-    public APIClient()
+    public APIClient(HttpClient httpClient, IConfiguration configuration)
     {
-        _httpClient = new HttpClient();
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _baseUrl = configuration["ApiBaseUrl"] ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
     public async Task<List<Livro>> ObterDadosLivroAsync(string? pesquisa)
@@ -21,12 +22,10 @@ public class APIClient : IAPIClient
         {
             if (!string.IsNullOrEmpty(pesquisa))
             {
-                _baseUrl = $"{_baseUrl}/obter-livro?pesquisa={pesquisa}";
+                return await ObterRequisicaoAsync<List<Livro>>($"{_baseUrl}/obter-livro?pesquisa={pesquisa}");
             }
             else
-                _baseUrl = $"{_baseUrl}/obter-livro";
-
-            return await ObterRequisicaoAsync<List<Livro>>(_baseUrl);
+                return await ObterRequisicaoAsync<List<Livro>>($"{_baseUrl}/obter-livro");
         }
 
         catch (HttpRequestException ex)
